@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import { countdownReducer } from '../reducers/reducer_countdown';
 
-export default () => {
+export const countdownStore = () => {
     
     const store = createStore(
         combineReducers({

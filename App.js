@@ -1,20 +1,32 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import store_countdown from 'js/stores/store_countdown';
-import countdownIncrement from 'js/actions/action_countdown';
+import { countdownIncrement } from './js/actions/action_countdown';
+import { countdownStore } from './js/stores/store_countdown';
 
-const countdownStore = store_countdown();
-
-countdownStore.subscribe(() => {
-  console.log(countdownStore.getState())
-})
+const store = countdownStore();
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      currentCountdown: 0,
+    }
+
+  }
+
    render() {
+    store.subscribe(() => {
+      console.log(store.getState())
+      this.setState({
+        currentCountdown: store.getState().countdown.count,
+      })
+    })
+
     return (
       <View style={styles.container}>
         <Text>Open up App.js to start working on your app!</Text>
-        <Text>Countdown : {countdownStore.getState().count}</Text>
+        <Text>Countdown : {this.state.currentCountdown}</Text>
         <CountdownIncrementButton />
         <CountdownResetButton />
       </View>
@@ -24,7 +36,7 @@ export default class App extends React.Component {
 
 class CountdownIncrementButton extends React.Component {
   CountdownIncrement = (add) => {
-    countdownStore.dispatch(countdownIncrement(add));
+    store.dispatch(countdownIncrement(add));
   }
 
   render(){
@@ -36,7 +48,7 @@ class CountdownIncrementButton extends React.Component {
 
 class CountdownResetButton extends React.Component{
   CountdownReset = () => {
-    countdownStore.dispatch({
+    store.dispatch({
       type: 'RESET'
     })
   }
