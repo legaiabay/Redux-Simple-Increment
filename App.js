@@ -1,21 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { createStore } from 'redux';
+import store_countdown from 'js/stores/store_countdown';
+import countdownIncrement from 'js/actions/action_countdown';
 
-const countdownStore = createStore((state = { count : 0 }, action) => {
-  switch(action.type){
-    case 'INCREMENT' :
-      return {
-        count : state.count + action.payload
-      }
-    case 'RESET' : 
-      return {
-        count : 0
-      }
-  }
+const countdownStore = store_countdown();
 
-  console.log(state);
-  return state;
+countdownStore.subscribe(() => {
+  console.log(countdownStore.getState())
 })
 
 export default class App extends React.Component {
@@ -33,16 +24,7 @@ export default class App extends React.Component {
 
 class CountdownIncrementButton extends React.Component {
   CountdownIncrement = (add) => {
-    countdownStore.dispatch({
-      type: 'INCREMENT',
-      payload: add,
-    })
-
-    console.log(countdownStore.getState())
-  }
-
-  loggg = () => {
-    
+    countdownStore.dispatch(countdownIncrement(add));
   }
 
   render(){
